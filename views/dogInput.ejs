@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<div class="question">
+    <h1>Math Quiz</h1>
+    <p>Answer the question below:</p>
+
+    <form action="/dogs" method="POST">
+        <div class="problem">
+            <h3>What is?</h3>
+        </div>
+        <label for="species">Your Answer:</label>
+        <input type="text" id="species" name="species" required>
+        <button type="submit">Submit</button>
+        <div class="problem">
+            <p>Streak: <%= numberOfDogs %></p>
+        </div>
+    </form>
+</div>
+</body>
