@@ -42,6 +42,10 @@ app.get('/dogs', (request, response) => {
     response.render('dogInput', { numberOfDogs: numberOfDogs, currentAnimal: currentAnimal });
 });
 
+app.get('/hello', (request, response) => {
+    response.render('hello', { message: "Hello From Hello Answer Is Not A Dog", otherAnimals: otherAnimals})
+});
+
 app.post('/dogs', (request, response) => {
     const { species } = request.body;
 
@@ -58,14 +62,19 @@ app.post('/dogs', (request, response) => {
         otherAnimals = 0;
         console.log(numberOfDogs);
     } else {
+        response.redirect('/hello');
 
         console.log('Incorrect!');
         otherAnimals++;
         console.log(otherAnimals);
+
     }
 
     response.redirect('/dogs');  // Redirect back to the /dogs page after processing
 });
+
+
+
 
 // Start the server
 const port = 3000;
