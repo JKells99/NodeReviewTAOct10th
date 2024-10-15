@@ -13,6 +13,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 let numberOfDogs = 0;
 let otherAnimals = 0;
 let currentAnimal = null;
+let leaderboard = [];
+
 
 app.get('/', (request, response) => {
     const users = [
@@ -23,35 +25,26 @@ app.get('/', (request, response) => {
         { name: 'Joe', age: 28 },
     ];
 
-    currentAnimal = getRandomAnimal();
     console.log(currentAnimal);
 
-    if (checkForDog(currentAnimal)) {
-        numberOfDogs++;
-    } else {
-        console.log('Not a dog');
-        numberOfDogs = 0;
-    }
-
-    response.render('userList', { animal: currentAnimal, users: users, numberOfDogs: numberOfDogs });
+    response.render('userList', { users: users, numberOfDogs: numberOfDogs });
 });
 
 app.get('/dogs', (request, response) => {
 
     currentAnimal = getRandomAnimal();
-    response.render('dogInput', { numberOfDogs: numberOfDogs, currentAnimal: currentAnimal });
+    response.render('dogInput', { numberOfDogs: numberOfDogs, currentAnimal: currentAnimal, otherAnimals: otherAnimals});
 });
 
 app.get('/hello', (request, response) => {
-    response.render('hello', { message: "Hello From Hello Answer Is Not A Dog", otherAnimals: otherAnimals})
+    response.render('hello', { message: "Hello From Hello Answer Is Not A Dog", otherAnimals: otherAnimals, numberOfDogs: numberOfDogs})
 });
+
 
 app.post('/dogs', (request, response) => {
     const { species } = request.body;
 
     const userInput = species;
-
-    currentAnimal = getRandomAnimal();
 
     console.log(`User Answer: ${userInput}`);
     console.log(`Current Animal: ${JSON.stringify(currentAnimal)}`);
@@ -59,18 +52,29 @@ app.post('/dogs', (request, response) => {
     if (checkForDog(userInput)) {
         console.log('Correct!');
         numberOfDogs++;
-        otherAnimals = 0;
         console.log(numberOfDogs);
     } else {
-        response.redirect('/hello');
-
         console.log('Incorrect!');
         otherAnimals++;
+
+        leaderboard.push({numberOfDogs: numberOfDogs,date: new Date()});
+        numberOfDogs = 0;
+
+
         console.log(otherAnimals);
+        console.log(numberOfDogs);
+        response.redirect('/hello');
+
 
     }
 
-    response.redirect('/dogs');  // Redirect back to the /dogs page after processing
+      // Redirect back to the /dogs page after processing
+});
+
+app.get('/leaderboard', (request, response) => {
+    const topStreak = leaderboard.sort((a, b) => b.numberOfDogs - a.numberOfDogs).slice(0, 10);
+    response.render('leaderBoard', { leaderboard: topStreak });
+
 });
 
 

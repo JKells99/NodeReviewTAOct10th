@@ -13,7 +13,7 @@ function getRandomAnimal() {
 }
 
 function checkForDog(animalName) {
-    return animalName.species === 'dog';
+    return animalName === 'dog';
 
 }
 
